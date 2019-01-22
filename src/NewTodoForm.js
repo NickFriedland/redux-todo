@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import uuid from 'uuid/v1';
 
 export default class NewTodoForm extends Component {
-  this.state = {
-    task: ''
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      task: ''
+    };
+  }
 
   handleChange = evt => {
     this.setState({

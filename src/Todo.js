@@ -5,7 +5,7 @@ class Todo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      task: this.props.task,
+      task: this.props.todo.task,
       isEditing: false
     };
     this.toggleEdit = this.toggleEdit.bind(this);
@@ -20,11 +20,13 @@ class Todo extends Component {
   }
   collectInput(evt) {
     evt.preventDefault();
-    this.props.updateTodo(this.state.task);
+    this.props.updateTodo(this.props.todo.id, this.state.task);
     this.setState({ isEditing: false });
   }
 
-  delete() {}
+  handleDelete = () => {
+    this.props.deleteTodo(this.props.todo.id);
+  };
 
   render() {
     // console.log(this.props);
@@ -46,8 +48,8 @@ class Todo extends Component {
       result = (
         <div>
           <button onClick={this.toggleEdit}>Edit</button>
-          <button onClick={this.props.deleteTodo}>X</button>
-          <li>{this.props.task}</li>
+          <button onClick={this.handleDelete}>X</button>
+          <li>{this.props.todo.task}</li>
         </div>
       );
     }
@@ -56,8 +58,8 @@ class Todo extends Component {
 }
 
 Todo.propTypes = {
-  deleteTodo: PropTypes.func.isRequired,
-  anyProp: PropTypes.bool.isRequired
+  deleteTodo: PropTypes.func.isRequired
+  // anyProp: PropTypes.bool.isRequired
 };
 
 export default Todo;

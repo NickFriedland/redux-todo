@@ -1,62 +1,57 @@
 import React, { Component } from 'react';
 import Todo from './Todo';
 import NewTodoForm from './NewTodoForm';
+import { connect } from 'react-redux';
 
 class TodoList extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      todos: []
-    };
     this.handleCreate = this.handleCreate.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
   }
 
   handleCreate(newTodo) {
-    this.setState({
-      todos: [...this.state.todos, newTodo]
-    });
+    this.props.dispatch({ type: 'ADD', payload: newTodo });
   }
   handleUpdate(id, updatedTask) {
-    const updatedTodos = this.state.todos.map(todo => {
-      if (todo.id === id) {
-        return { ...todo, task: updatedTask };
-      }
-      return todo;
-    });
-    this.setState({ todos: updatedTodos });
+    this.props.dispatch({ type: 'UPDATE', payload: { id, updatedTask } });
   }
   handleDelete(id) {
-    this.setState({
-      todos: this.state.todos.filter(todo => todo.id !== id)
-    });
+    this.props.dispatch({ type: 'DELETE', payload: id });
   }
   render() {
+    console.log('TODO LIST TODOS', this.props.todos);
     return (
       <div>
         <NewTodoForm createTodo={this.handleCreate} />
         <ul>
-          {this.state.todos.map(todo => {
-            return React.createElement(Todo, {
-              deleteTodo: this.handleDelete,
-              key: todo.id,
-              updateTodo: this.handleUpdate,
-              ...todo
-            });
-            /*
+          {this.props.todos.map(todo => {
+            // return React.createElement(Todo, {
+            //   deleteTodo: this.handleDelete,
+            //   key: todo.id,
+            //   updateTodo: this.handleUpdate,
+            //   ...todo
+            // });
+
+            return (
               <Todo
                 deleteTodo={this.handleDelete}
                 key={todo.id}
-                task={todo}
+                todo={todo}
                 updateTodo={this.handleUpdate}
               />
-            */
+            );
           })}
         </ul>
       </div>
     );
   }
 }
+function mapStateToProps(state) {
+  return { todos: state.todos };
+}
 
-export default TodoList;
+const connectToState = connect(mapStateToProps);
+
+export default connectToState(TodoList);
